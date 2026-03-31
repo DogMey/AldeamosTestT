@@ -46,7 +46,7 @@ El producer inyecta el timestamp en el momento en que recibe la petición HTTP. 
 
 Puntos que el problema no definía explícitamente o que se tuvieron en cuenta:
 
-- Se tomo `content` es **opcional para TEXTO** y **obligatorio para multimedia** (IMAGEN, VIDEO, DOCUMENTO).
+- `content` es **obligatorio para todos los tipos de mensaje**. Para multimedia (IMAGEN, VIDEO, DOCUMENTO) además debe ser una URL http/https válida.
 - Al superar el límite de 3 mensajes, **el mensaje se persiste con `error`** se guarda también para tener auditoria del error.
 - La ventana de 24h se definio como **deslizante** (últimas 24h desde ahora), no un reset a medianoche.
 - Las líneas autorizadas son **fijas en base de datos**, sin endpoint para gestionarlas.
@@ -68,6 +68,6 @@ Puntos que el problema no definía explícitamente o que se tuvieron en cuenta:
 ## Validaciones implementadas (Producer)
 
 - **E.164** para `origin` y `destination` (`^\+[1-9]\d{6,14}$`)
-- **URL válida** (`http/https`) para `content` cuando `messageType` es `IMAGEN`, `VIDEO` o `DOCUMENTO`
+- **`content` obligatorio** para todos los tipos; adicionalmente debe ser una **URL válida** (`http/https`) cuando `messageType` es `IMAGEN`, `VIDEO` o `DOCUMENTO`
 - **Origen autorizado**: se verifica en MySQL antes de publicar
 - **JWT obligatorio** en todos los endpoints excepto `/auth/login`

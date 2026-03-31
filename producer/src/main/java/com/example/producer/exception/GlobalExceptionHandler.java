@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
         log.warn("Unreadable HTTP message: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("error", "Request body is missing or contains an invalid value. " +
-                        "Check that messageType is one of: TEXT, IMAGE, VIDEO, DOCUMENT"));
+                        "Check that messageType is one of: TEXTO, IMAGEN, VIDEO, DOCUMENTO"));
     }
 
     // ─── 404 Not Found ───────────────────────────────────────────────────────

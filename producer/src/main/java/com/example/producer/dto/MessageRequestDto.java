@@ -20,6 +20,7 @@ public record MessageRequestDto(
         @NotNull(message = "messageType is required — valid values: TEXTO, IMAGEN, VIDEO, DOCUMENTO")
         MessageType messageType,
 
+        @NotBlank(message = "content is required")
         String content
 ) {
 }

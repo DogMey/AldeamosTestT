@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  *
  * Lógica:
  *  - Tipos multimedia: IMAGEN, VIDEO, DOCUMENTO → content debe ser URL http/https válida.
- *  - Tipo TEXTO → content es libre, no se valida formato.
+ *  - Tipo TEXTO → content es obligatorio (validado por @NotBlank en el DTO), sin restricción de formato.
  */
 public class MessageContentValidator implements ConstraintValidator<ValidMessageContent, MessageRequestDto> {
 

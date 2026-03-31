@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -19,15 +19,15 @@ public class AuthController {
     private final AuthService authService;
 
     /**
-     * POST /auth/login
+     * POST /api/v1/auth/login
      * Body: { "username": "admin", "password": "admin" }
      * Returns a Bearer JWT token.
      */
     @PostMapping("/login")
     ResponseEntity<AuthResponseDto> login(@RequestBody AuthRequestDto request) {
-        log.debug("POST /auth/login — username='{}'", request.username());
+        log.debug("POST /api/v1/auth/login — username='{}'", request.username());
         AuthResponseDto response = authService.login(request);
-        log.debug("POST /auth/login — responded 200 OK for username='{}'", request.username());
+        log.debug("POST /api/v1/auth/login — responded 200 OK for username='{}'", request.username());
         return ResponseEntity.ok(response);
     }
 }

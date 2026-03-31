@@ -9,8 +9,8 @@ import java.lang.annotation.*;
  * Validación a nivel de clase para {@code MessageRequestDto}.
  *
  * Regla de negocio:
- *  - Si messageType es IMAGEN, VIDEO o DOCUMENTO → content es obligatorio y debe ser una URL válida (http/https).
- *  - Si messageType es TEXTO → content es libre (puede ser null o cualquier texto).
+ *  - Si messageType es IMAGEN, VIDEO o DOCUMENTO → content debe ser una URL válida (http/https).
+ *  - Si messageType es TEXTO → content es obligatorio pero sin restricción de formato.
  */
 @Documented
 @Constraint(validatedBy = MessageContentValidator.class)

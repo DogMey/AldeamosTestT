@@ -1,5 +1,6 @@
 package com.example.consumer.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -34,9 +35,9 @@ public class RabbitMQConsumerConfig {
     }
 
     @Bean
-    @SuppressWarnings({ "removal" })
+    @SuppressWarnings("removal")
     MessageConverter jsonMessageConverter() {
-        return new Jackson2JsonMessageConverter();
+        return new Jackson2JsonMessageConverter(new ObjectMapper());
     }
 
     @Bean
