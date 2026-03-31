@@ -1,0 +1,68 @@
+{
+  "groups": [
+    {
+      "name": "rabbitmq",
+      "type": "com.example.producer.config.RabbitMQTopologyProperties",
+      "sourceType": "com.example.producer.config.RabbitMQTopologyProperties"
+    },
+    {
+      "name": "jwt",
+      "type": "com.example.producer.config.JwtProperties",
+      "sourceType": "com.example.producer.config.JwtProperties"
+    },
+    {
+      "name": "auth",
+      "type": "com.example.producer.config.AuthProperties",
+      "sourceType": "com.example.producer.config.AuthProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "rabbitmq.exchange",
+      "type": "java.lang.String",
+      "sourceType": "com.example.producer.config.RabbitMQTopologyProperties",
+      "description": "Nombre del exchange de RabbitMQ al que el producer publica mensajes.",
+      "defaultValue": "producer.exchange"
+    },
+    {
+      "name": "rabbitmq.routing-key",
+      "type": "java.lang.String",
+      "sourceType": "com.example.producer.config.RabbitMQTopologyProperties",
+      "description": "Routing key usada para enrutar mensajes hacia la cola del consumer.",
+      "defaultValue": "producer.messages"
+    },
+    {
+      "name": "rabbitmq.queue",
+      "type": "java.lang.String",
+      "sourceType": "com.example.producer.config.RabbitMQTopologyProperties",
+      "description": "Nombre de la cola RabbitMQ donde se depositan los mensajes.",
+      "defaultValue": "producer.queue"
+    },
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "sourceType": "com.example.producer.config.JwtProperties",
+      "description": "Clave secreta HMAC-SHA256 para firmar los JWT (mínimo 32 caracteres)."
+    },
+    {
+      "name": "jwt.expiration-ms",
+      "type": "java.lang.Long",
+      "sourceType": "com.example.producer.config.JwtProperties",
+      "description": "Tiempo de expiración del JWT en milisegundos.",
+      "defaultValue": 86400000
+    },
+    {
+      "name": "auth.username",
+      "type": "java.lang.String",
+      "sourceType": "com.example.producer.config.AuthProperties",
+      "description": "Nombre de usuario para autenticarse en el endpoint POST /auth/login."
+    },
+    {
+      "name": "auth.password",
+      "type": "java.lang.String",
+      "sourceType": "com.example.producer.config.AuthProperties",
+      "description": "Contraseña para autenticarse en el endpoint POST /auth/login."
+    }
+  ],
+  "hints": []
+}

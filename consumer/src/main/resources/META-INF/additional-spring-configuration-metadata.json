@@ -1,0 +1,33 @@
+{
+  "groups": [
+    {
+      "name": "rabbitmq",
+      "type": "com.example.consumer.config.RabbitMQProperties",
+      "sourceType": "com.example.consumer.config.RabbitMQProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "rabbitmq.exchange",
+      "type": "java.lang.String",
+      "sourceType": "com.example.consumer.config.RabbitMQProperties",
+      "description": "Nombre del exchange de RabbitMQ al que el consumer está vinculado.",
+      "defaultValue": "producer.exchange"
+    },
+    {
+      "name": "rabbitmq.routing-key",
+      "type": "java.lang.String",
+      "sourceType": "com.example.consumer.config.RabbitMQProperties",
+      "description": "Routing key usada para el binding entre el exchange y la cola.",
+      "defaultValue": "producer.messages"
+    },
+    {
+      "name": "rabbitmq.queue",
+      "type": "java.lang.String",
+      "sourceType": "com.example.consumer.config.RabbitMQProperties",
+      "description": "Nombre de la cola RabbitMQ que este consumer escucha.",
+      "defaultValue": "producer.queue"
+    }
+  ],
+  "hints": []
+}

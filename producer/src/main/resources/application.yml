@@ -3,7 +3,8 @@ spring:
     name: producer
 
   autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
 
   # ─── Database (MySQL) ────────────────────────────────────────────────────────
   datasource:
@@ -15,10 +16,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: ${DDL_AUTO:update}
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
     show-sql: ${JPA_SHOW_SQL:false}
+    open-in-view: false
 
   # ─── RabbitMQ ────────────────────────────────────────────────────────────────
   rabbitmq:
