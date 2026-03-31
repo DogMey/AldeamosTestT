@@ -3,7 +3,9 @@ package com.example.producer.repository;
 import com.example.producer.entity.OriginLine;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OriginLineRepository extends JpaRepository<OriginLine, Long> {
+import java.util.UUID;
 
-    boolean existsByPhoneNumberAndActiveTrue(String phoneNumber);
+public interface OriginLineRepository extends JpaRepository<OriginLine, UUID> {
+
+    boolean existsByOrigin(String origin);
 }

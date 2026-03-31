@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: producer
+
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
+  # ─── Database (MySQL) ────────────────────────────────────────────────────────
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/producer_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:secret}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO:update}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    show-sql: ${JPA_SHOW_SQL:false}
+
+  # ─── RabbitMQ ────────────────────────────────────────────────────────────────
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    virtual-host: ${RABBITMQ_VHOST:/}
+
+# ─── RabbitMQ topology ─────────────────────────────────────────────────────────
+rabbitmq:
+  exchange: ${RABBITMQ_EXCHANGE:producer.exchange}
+  routing-key: ${RABBITMQ_ROUTING_KEY:producer.messages}
+  queue: ${RABBITMQ_QUEUE:producer.queue}
+
+# ─── JWT ───────────────────────────────────────────────────────────────────────
+# Secret must be at least 32 characters (256-bit) for HMAC-SHA256
+jwt:
+  secret: ${JWT_SECRET:aldeamosSuperSecretKeyForJWT_32CharsMin!}
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+
+# ─── Simple in-memory user for /auth/login ─────────────────────────────────────
+auth:
+  username: ${AUTH_USERNAME:admin}
+  password: ${AUTH_PASSWORD:changeme}

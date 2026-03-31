@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "origin_lines")
 @Data
@@ -13,15 +15,20 @@ import lombok.NoArgsConstructor;
 public class OriginLine {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "CHAR(36)", updatable = false, nullable = false)
+    private UUID id;
 
-    @Column(name = "phone_number", nullable = false, unique = true, length = 20)
-    private String phoneNumber;
+    @Column(nullable = false, unique = true, length = 20)
+    private String origin;
 
-    @Column(length = 255)
-    private String description;
+    @Column(length = 20)
+    private String destination;
 
-    @Column(nullable = false)
-    private Boolean active = true;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "message_type", length = 20)
+    private MessageType messageType;
+
+    @Column(columnDefinition = "TEXT")
+    private String content;
 }

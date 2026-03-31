@@ -1,19 +1,20 @@
 package com.example.producer.dto;
 
+import com.example.producer.entity.MessageType;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import jakarta.validation.constraints.NotNull;
 
-@Data
-public class MessageRequestDto {
+public record MessageRequestDto(
 
-    @NotBlank(message = "origin is required")
-    private String origin;
+        @NotBlank(message = "origin is required")
+        String origin,
 
-    @NotBlank(message = "destination is required")
-    private String destination;
+        @NotBlank(message = "destination is required")
+        String destination,
 
-    @NotBlank(message = "messageType is required")
-    private String messageType;
+        @NotNull(message = "messageType is required")
+        MessageType messageType,
 
-    private String content;
+        String content
+) {
 }

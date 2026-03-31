@@ -1,15 +1,9 @@
 package com.example.producer.dto;
 
-import lombok.Getter;
+public record AuthResponseDto(String accessToken, String tokenType, long expiresIn) {
 
-@Getter
-public class AuthResponseDto {
-    private final String accessToken;
-    private final String tokenType = "Bearer";
-    private final long expiresIn;
-
+    /** Convenience constructor: tokenType is always "Bearer" */
     public AuthResponseDto(String accessToken, long expiresIn) {
-        this.accessToken = accessToken;
-        this.expiresIn = expiresIn;
+        this(accessToken, "Bearer", expiresIn);
     }
 }
