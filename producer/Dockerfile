@@ -5,22 +5,22 @@ WORKDIR /workspace
 COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
-# Download dependencies first (layer caching)
 RUN ./mvnw dependency:go-offline -B
 
 COPY src src
 RUN ./mvnw package -DskipTests -B
 
 # ── Stage 2: runtime ─────────────────────────────────────────────────────────
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jre
 WORKDIR /app
 
-# Create non-root user
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-USER appuser
+RUN groupadd --system appgroup && useradd --system --gid appgroup appuser
 
-COPY --from=build /workspace/target/*.jar app.jar
+COPY --from=build --chown=appuser:appgroup /workspace/target/*.jar app.jar
+RUN chmod 400 app.jar
+
+USER appuser
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]

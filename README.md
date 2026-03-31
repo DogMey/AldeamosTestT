@@ -104,6 +104,14 @@ rabbitmq    running (healthy)   0.0.0.0:5672->5672/tcp, 0.0.0.0:15672->15672/tcp
 
 ---
 
+## Regla de negocio
+
+A un mismo número de destino **no se pueden enviar más de 3 mensajes en un período de 24 horas**.
+
+Si se supera el límite, el mensaje **igual se persiste en MongoDB** pero con el campo `error` poblado, permitiendo auditoría completa del tráfico bloqueado.
+
+---
+
 ## Uso de la API (Producer)
 
 ### Obtener token JWT
@@ -155,12 +163,24 @@ curl -X POST http://localhost:8080/messages/send \
 
 **Tipos de mensaje válidos:** `TEXTO` · `IMAGEN` · `VIDEO` · `DOCUMENTO`
 
+> Para `IMAGEN`, `VIDEO` y `DOCUMENTO` el campo `content` debe ser una URL `http/https` válida.
+
 **Líneas de origen autorizadas (predefinidas en MySQL):**
 - `+573001234567`
 - `+573009876543`
 - `+573001112233`
 - `+573004445566`
 - `+573007778899`
+
+---
+
+### Consultar mensajes enviados a un destino (Consumer)
+
+```bash
+curl "http://localhost:8081/messages?destination=+573009876543"
+```
+
+Devuelve todos los mensajes del destino, incluidos los bloqueados por la regla de 3 mensajes (campo `error` poblado).
 
 ---
 
@@ -196,6 +216,10 @@ AldeamosTestT/
 ├── docker-compose.yml       ← Orquestación de todos los servicios
 ├── .env.example             ← Plantilla de variables de entorno
 ├── README.md
+├── docs/                    ← Documentación técnica
+│   ├── analisis.md          ← Herramientas, decisiones de diseño
+│   ├── design.md            ← Diagramas Mermaid (arquitectura, flujo, modelo)
+│   └── postmortem.md        ← Logs, métricas y puntos de falla
 ├── producer/                ← Microservicio Producer (puerto 8080)
 │   ├── Dockerfile
 │   ├── docker/

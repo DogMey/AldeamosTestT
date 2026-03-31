@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(find \"/c/Users/Kevin/Mi unidad \\(kevinsantiagoram25@gmail.com\\)/Proyectos/AldeamosTest/producer\" -type f)"
-    ]
-  }
-}

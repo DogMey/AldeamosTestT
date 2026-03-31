@@ -2,42 +2,66 @@
 
 ## Contexto
 
-Sistema de mensajería asíncrona para envío de mensajes entre líneas telefónicas. El sistema debe validar origen, publicar el mensaje y persistirlo; con una restricción de negocio de máximo 3 mensajes por destinatario en 24 horas.
+Sistema de mensajería asíncrona para envío de mensajes entre líneas telefónicas. El sistema debe:
+
+- Validar origen
+- Publicar el mensaje y persistirlo
+- Con una restricción de negocio de máximo 3 mensajes por destinatario en 24 horas.
 
 ---
 
 ## Herramientas seleccionadas
 
-| Herramienta | Rol | Por qué |
+| Herramienta | Rol | 
 |---|---|---|
-| Spring Boot 4.0.5 | Framework base | Ecosistema maduro, autoconfiguración, integración nativa con AMQP y MongoDB |
-| MySQL 8 | Persistencia Producer | Datos relacionales: líneas autorizadas con validación de origen |
-| MongoDB 7 | Persistencia Consumer | Documentos flexibles, sin esquema fijo, ideal para mensajes con campo `error` opcional |
-| RabbitMQ 3 | Broker de mensajería | Desacoplamiento entre servicios, garantía de entrega, soporte de headers AMQP |
-| JWT (JJWT 0.12.6) | Autenticación | Stateless, sin sesiones en servidor |
-| Docker Compose | Orquestación local | Levanta los 5 servicios con un solo comando, healthchecks garantizan el orden de arranque |
+| Spring Boot 4.0.5 | Framework base |
+| MySQL 8 | Persistencia Producer |
+| MongoDB 7 | Persistencia Consumer |
+| RabbitMQ 3 | Broker de mensajería |
+| JWT (JJWT 0.12.6) | Autenticación |
+| Docker Compose | Orquestación local |
 
 ---
 
 ## Decisiones de diseño
 
 **DTOs como `record`**  
-Inmutabilidad por defecto, menos código. Un DTO no necesita setters.
+Facil implementación y simplificación de codigo.
 
 **Interfaces de servicio + `Impl`**  
-Patrón estándar en Spring. Permite cambiar implementaciones sin tocar los controladores.
+Permite cambiar implementaciones sin tocar los controladores. Seguimos buenas practicas en SpringBoot.
 
 **`@ConfigurationProperties` para topología RabbitMQ**  
-Las propiedades de exchange/queue/routing-key son configurables por entorno vía `.env`. Spring solo autoconfigura la conexión, no la topología(por eso se necesita una clase propia).
+Spring solo autoconfigura la conexión, no la topología(por eso se necesita una clase propia).
 
 **Un único `docker-compose.yml` en la raíz**  
 Monorepo: un solo archivo orquesta todos los servicios. Cada microservicio tiene su propio `Dockerfile`.
 
-**Campo `error` en `MessageDocument`**  
-En lugar de rechazar mensajes que violan la regla de negocio, se persisten con el campo `error` poblado. Permite auditoría.
-
 **Header `x-timestamp-reception`**  
-El producer inyecta el timestamp en el momento en que recibe la petición HTTP. El consumer lo lee para calcular el `processingTime` real end-to-end.
+El producer inyecta el timestamp en el momento en que recibe la petición HTTP. El consumer lo lee para calcular el `processingTime`.
+
+---
+
+## Supuestos y restricciones
+
+Puntos que el problema no definía explícitamente o que se tuvieron en cuenta:
+
+- Se tomo `content` es **opcional para TEXTO** y **obligatorio para multimedia** (IMAGEN, VIDEO, DOCUMENTO).
+- Al superar el límite de 3 mensajes, **el mensaje se persiste con `error`** se guarda también para tener auditoria del error.
+- La ventana de 24h se definio como **deslizante** (últimas 24h desde ahora), no un reset a medianoche.
+- Las líneas autorizadas son **fijas en base de datos**, sin endpoint para gestionarlas.
+- El `processingTime` mide desde que el producer recibe la petición HTTP hasta que el consumer la persiste.
+
+---
+
+## Riesgos identificados
+
+| Riesgo | Impacto | Mitigación |
+|---|---|---|
+| Consumer caído al llegar mensajes | Mensajes sin procesar | RabbitMQ guarda los mensajes en cola hasta que el consumer vuelva a estar disponible |
+| MySQL tarda en iniciar | Producer falla al arrancar | Docker no levanta el producer hasta que MySQL responde correctamente al healthcheck |
+| JWT secret débil | Tokens forjables | El secret debe tener mínimo 32 caracteres; si es corto, la librería rechaza el arranque |
+| Ventana de 24h mal calculada | Regla de negocio incorrecta | Se calcula como "últimas 24 horas exactas" usando el reloj del servidor, sin depender de la zona horaria |
 
 ---
 
