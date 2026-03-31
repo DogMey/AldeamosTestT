@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: consumer
+
+  # ─── MongoDB ──────────────────────────────────────────────────────────────
+  data:
+    mongodb:
+      uri: ${MONGO_URI:mongodb://localhost:27017/consumer_db}
+
+  # ─── RabbitMQ ─────────────────────────────────────────────────────────────
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    virtual-host: ${RABBITMQ_VHOST:/}
+
+# ─── RabbitMQ topology ────────────────────────────────────────────────────────
+rabbitmq:
+  exchange: ${RABBITMQ_EXCHANGE:producer.exchange}
+  routing-key: ${RABBITMQ_ROUTING_KEY:producer.messages}
+  queue: ${RABBITMQ_QUEUE:producer.queue}
+
+# ─── Server ───────────────────────────────────────────────────────────────────
+server:
+  port: 8081
